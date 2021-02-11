@@ -51,6 +51,7 @@
     "dist"
   ],
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
     "react-table": "^7.6.3"
   }
 }

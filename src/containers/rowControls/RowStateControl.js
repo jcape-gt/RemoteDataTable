@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import DataControl from '../dataControls/DataControl';
+import PropTypes from 'prop-types'
+import React from 'react'
+import DataControl from '../dataControls/DataControl'
 
 /**
  * Renders edit or view controls based on the current state
@@ -10,8 +10,8 @@ import DataControl from '../dataControls/DataControl';
  * @returns {ReactElement} The element rendered given the current editing state
  */
 function RowStateControl(props) {
-  const {editing, viewControl, editControl} = props;
-  
+  const { editing, viewControl, editControl } = props
+
   return (
     <DataControl
       editing={editing}
@@ -24,7 +24,7 @@ function RowStateControl(props) {
 RowStateControl.propTypes = {
   editing: PropTypes.bool.isRequired,
   viewControl: PropTypes.node.isRequired,
-  editControl: PropTypes.node.isRequired,
+  editControl: PropTypes.node.isRequired
 }
 
-export default RowStateControl;
+export default RowStateControl

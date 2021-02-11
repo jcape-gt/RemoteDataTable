@@ -1,26 +1,26 @@
-import React from 'react';
-import {useTable, useRowState} from 'react-table';
+import React from 'react'
+import { useTable, useRowState } from 'react-table'
 import MaUTable from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
-import DataRow from './DataRow';
-import PropTypes from 'prop-types';
+import DataRow from './DataRow'
+import PropTypes from 'prop-types'
 
 function makeBlankRow(columns) {
-  let newRow = {};
+  const newRow = {}
   columns.forEach((column) => {
-    newRow[`${column.accessor}`] = column.defaultValue;
-  });
-  return newRow;
+    newRow[`${column.accessor}`] = column.defaultValue
+  })
+  return newRow
 }
 
 function appendNewRow(columns, data) {
   const hasNewRow = (past, current) => {
-    return past || current.id === 'new';
+    return past || current.id === 'new'
   }
 
-  if(!data.reduce(hasNewRow, false)) {
-    const blankRow = makeBlankRow(columns);
-    data.push(blankRow);
+  if (!data.reduce(hasNewRow, false)) {
+    const blankRow = makeBlankRow(columns)
+    data.push(blankRow)
   }
 }
 
@@ -34,26 +34,26 @@ function appendNewRow(columns, data) {
  * @returns {ReactElement} The data table to be rendered
  */
 function DataTable(props) {
-  const { 
-    data, 
-    columns, 
-    onSave, 
-    onEdit, 
+  const {
+    data,
+    columns,
+    onSave,
+    onEdit,
     onRevert,
     initialRowState,
     displayBlankRow
-  } = props;
-  
+  } = props
+
   const getInitialRowState = (row) => {
-    return { ...initialRowState, className: "", newRecord: false }
+    return { ...initialRowState, className: '', newRecord: false }
   }
 
   const getInitialCellState = (cell) => {
-    return {updatedValue: null}
+    return { updatedValue: null }
   }
 
-  if(displayBlankRow) {
-    appendNewRow(columns, data);
+  if (displayBlankRow) {
+    appendNewRow(columns, data)
   }
 
   const {
@@ -61,19 +61,21 @@ function DataTable(props) {
     getTableBodyProps,
     headerGroups,
     rows,
-    prepareRow,
-  } = useTable({ 
-    columns, 
-    data, 
-    initialRowStateAccessor: getInitialRowState,
-    initialCellStateAccessor: getInitialCellState,
-    }, useRowState
-  );
-  
+    prepareRow
+  } = useTable(
+    {
+      columns,
+      data,
+      initialRowStateAccessor: getInitialRowState,
+      initialCellStateAccessor: getInitialCellState
+    },
+    useRowState
+  )
+
   return (
-    <MaUTable {...getTableProps()} style={{borderCollapse: 'collapse'}}>
+    <MaUTable {...getTableProps()} style={{ borderCollapse: 'collapse' }}>
       <thead>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             <th>Action</th>
             {headerGroup.headers.map(column => (
@@ -85,15 +87,21 @@ function DataTable(props) {
         ))}
       </thead>
       <TableBody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
+        {rows.map((row) => {
+          prepareRow(row)
           return (
-            <DataRow 
-              row={row} 
-              key={row.id} 
-              onSave={() => {onSave(row)}} 
-              onEdit={() => {onEdit(row)}} 
-              onRevert={() => {onRevert(row)}} 
+            <DataRow
+              row={row}
+              key={row.id}
+              onSave={() => {
+                onSave(row)
+              }}
+              onEdit={() => {
+                onEdit(row)
+              }}
+              onRevert={() => {
+                onRevert(row)
+              }}
             />
           )
         })}
@@ -107,7 +115,7 @@ DataTable.propTypes = {
   columns: PropTypes.array.isRequired,
   onSave: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
-  onRevert: PropTypes.func.isRequired,
+  onRevert: PropTypes.func.isRequired
 }
 
-export default DataTable;
+export default DataTable

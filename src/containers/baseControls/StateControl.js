@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import PropTypes from 'prop-types'
+import React from 'react'
 
 /**
  * Conditionally renders controls based on the current state
@@ -8,19 +8,15 @@ import React from 'react';
  * @returns {ReactElement} Rendered control for the given state
  */
 function StateControl(props) {
-  const {stateControlMapping, state} = props;
-  const control = stateControlMapping.get(state);
-  
-  return (
-    <React.Fragment>
-      {control}
-    </React.Fragment>
-  )
+  const { stateControlMapping, state } = props
+  const control = stateControlMapping.get(state)
+
+  return <React.Fragment>{control}</React.Fragment>
 }
 
 StateControl.propTypes = {
   stateControlMapping: PropTypes.object.isRequired,
-  state: PropTypes.any.isRequired,
-};
+  state: PropTypes.any.isRequired
+}
 
-export default StateControl;
+export default StateControl

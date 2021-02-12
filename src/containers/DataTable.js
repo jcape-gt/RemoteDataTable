@@ -97,6 +97,7 @@ function DataTable(props) {
                 onSave(row)
               }}
               onEdit={() => {
+                console.log('edit click')
                 onEdit(row)
               }}
               onRevert={() => {

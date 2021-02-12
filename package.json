@@ -1,6 +1,6 @@
 {
   "name": "@jessec/reactdatatable",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A CRUD data table for React",
   "author": "jcape-gt",
   "license": "MIT",

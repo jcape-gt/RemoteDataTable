@@ -2,6 +2,8 @@ import React from 'react'
 import { useTable, useRowState } from 'react-table'
 import MaUTable from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
+import { MuiPickersUtilsProvider } from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns'
 import DataRow from './DataRow'
 import PropTypes from 'prop-types'
 
@@ -22,6 +24,24 @@ function appendNewRow(columns, data) {
     const blankRow = makeBlankRow(columns)
     data.push(blankRow)
   }
+}
+
+function DataTableHeader(props) {
+  const { headerGroups } = props
+  return (
+    <thead>
+      {headerGroups.map((headerGroup) => (
+        <tr {...headerGroup.getHeaderGroupProps()}>
+          <th>Action</th>
+          {headerGroup.headers.map(column => (
+            <th {...column.getHeaderProps()}>
+              {column.render('Header')}
+            </th>
+          ))}
+        </tr>
+      ))}
+    </thead>
+  )
 }
 
 /**
@@ -73,41 +93,33 @@ function DataTable(props) {
   )
 
   return (
-    <MaUTable {...getTableProps()} style={{ borderCollapse: 'collapse' }}>
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            <th>Action</th>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <TableBody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row)
-          return (
-            <DataRow
-              row={row}
-              key={row.id}
-              onSave={() => {
-                onSave(row)
-              }}
-              onEdit={() => {
-                console.log('edit click')
-                onEdit(row)
-              }}
-              onRevert={() => {
-                onRevert(row)
-              }}
-            />
-          )
-        })}
-      </TableBody>
-    </MaUTable>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <MaUTable {...getTableProps()} style={{ borderCollapse: 'collapse' }}>
+        <DataTableHeader headerGroups={headerGroups} />
+
+        <TableBody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row)
+            return (
+              <DataRow
+                row={row}
+                key={row.id}
+                onSave={() => {
+                  onSave(row)
+                }}
+                onEdit={() => {
+                  console.log('edit click')
+                  onEdit(row)
+                }}
+                onRevert={() => {
+                  onRevert(row)
+                }}
+              />
+            )
+          })}
+        </TableBody>
+      </MaUTable>
+    </MuiPickersUtilsProvider>
   )
 }
 

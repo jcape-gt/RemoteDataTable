@@ -1,6 +1,4 @@
 import React from 'react'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns'
 import { 
   DataDateControl, 
   DataTextControl, 
@@ -121,7 +119,6 @@ const App = () => {
   ]
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <DataTable 
         data={books} 
         columns={columns} 
@@ -131,7 +128,6 @@ const App = () => {
         initialRowState={initialRowEditState}
         displayBlankRow={true}
       />
-    </MuiPickersUtilsProvider>
   )
 }
 

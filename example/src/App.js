@@ -1,11 +1,12 @@
 import React from 'react'
 import { 
-  DataDateControl, 
-  DataTextControl, 
-  DataSelectControl, 
+  DataDateCell, 
+  DataTextCell, 
+  DataTextControl,
+  DataSelectCell, 
   DataTable,
+  useRowEditor,
   withEditing,
-  useRowEditor
 } from 'reactdatatable'
 import 'reactdatatable/dist/index.css'
 
@@ -20,9 +21,9 @@ const App = () => {
 
   const [books, setBooks] = React.useState(
     [
-      { id: 1, name: 'The Great Batsby', publishDate: '04/10/1925', genre: 1 },
-      { id: 2, name: 'The Hobbit', publishDate: '09/21/1937', genre: 2 },
-      { id: 3, name: 'The Picture of Dorian Gray', publishDate: '01/07/1890', genre: 3 }
+      { id: 1, name: 'The Great Batsby', author: 'a', publishDate: '04/10/1925', genre: 1 },
+      { id: 2, name: 'The Hobbit', author: 'b', publishDate: '09/21/1937', genre: 2 },
+      { id: 3, name: 'The Picture of Dorian Gray', author: 'c', publishDate: '01/07/1890', genre: 3 }
     ]
   );
 
@@ -30,6 +31,9 @@ const App = () => {
     const updatedBooks = row.state.dirtyValues;
     setBooks([...books].map(o => {
       if(o.id === updatedBooks.id) {
+        if(updatedBooks.id === 'new') {
+          updatedBooks.id = updatedBooks.name;
+        }
         return {...o, ...updatedBooks}
       }
       else return o;
@@ -60,10 +64,8 @@ const App = () => {
     (row) => {onSave(row)},
     (row) => {onRevert(row)}
   )
-
-  const EditableCell = withEditing(DataTextControl)
-  const EditableDateCell = withEditing(DataDateControl)
-  const EditableSelectCell = withEditing(DataSelectControl)
+  
+  const EditableTextControl = withEditing(DataTextControl)
 
   const columns = [
     {
@@ -71,13 +73,15 @@ const App = () => {
       accessor: 'name',
       defaultValue: '',
       Cell: (cell) => {
-        return (
-          <EditableCell 
-            value={cell.value} 
-            accessor='name'
-            row={cell.row} 
-          />
-        )
+        return <EditableTextControl row={cell.row} accessor='name' value={cell.value} />
+      }
+    },
+    {
+      Header: 'Author',
+      accessor: 'author',
+      defaultValue: '',
+      Cell: (cell) => {
+        return <DataTextCell cell={cell} accessor='author' />
       }
     },
     {
@@ -85,13 +89,7 @@ const App = () => {
       accessor: 'publishDate',
       defaultValue: '',
       Cell: (cell) => {
-        return (
-          <EditableDateCell 
-            value={cell.value} 
-            row={cell.row} 
-            accessor='publishDate' 
-          />
-        )
+        return <DataDateCell cell={cell} accessor='publishDate' />
       }
     },
     {
@@ -99,14 +97,7 @@ const App = () => {
       accessor: 'genre',
       defaultValue: 'default',
       Cell: (cell) => {
-        return (
-          <EditableSelectCell 
-            value={cell.value} 
-            row={cell.row} 
-            accessor='genre' 
-            items={genres}
-          />
-        )
+        return <DataSelectCell cell={cell} accessor='genre' items={genres} />
       }
     },
     {

@@ -9,7 +9,7 @@ import DataTextControl from '../dataControls/DataTextControl'
  * @returns {ReactElement} The text control to be rendered
  */
 function DataTextCell(props) {
-  const { cell, accessor } = props
+  const { cell, accessor, ...childProps } = props
 
   const setUpdatedValue = (row, accessor, value) => {
     const updatedValues = {
@@ -29,6 +29,7 @@ function DataTextCell(props) {
       onChange={(val) => {
         setUpdatedValue(cell.row, accessor, val)
       }}
+      {...childProps}
     />
   )
 }

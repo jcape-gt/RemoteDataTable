@@ -11,13 +11,19 @@ import DateControl from '../baseControls/DateControl'
  * @returns {ReactElement} The view or edit control to be rendered
  */
 function DataDateControl(props) {
-  const { value, editing, onChange } = props
+  const { value, editing, onChange, validation } = props
 
   return (
     <DataControl
       editing={editing}
       viewControl={value}
-      editControl={<DateControl value={value} onChange={onChange} />}
+      editControl={
+        <DateControl
+          value={value}
+          onChange={onChange}
+          validation={validation}
+        />
+      }
     />
   )
 }

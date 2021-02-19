@@ -10,7 +10,7 @@ import DataSelectControl from '../dataControls/DataSelectControl'
  * @returns {ReactElement} The select control to be rendered
  */
 function DataSelectCell(props) {
-  const { cell, accessor, items } = props
+  const { cell, accessor, items, ...childProps } = props
 
   const setUpdatedValue = (row, accessor, value) => {
     const updatedValues = {
@@ -31,6 +31,7 @@ function DataSelectCell(props) {
         setUpdatedValue(cell.row, accessor, val)
       }}
       items={items}
+      {...childProps}
     />
   )
 }

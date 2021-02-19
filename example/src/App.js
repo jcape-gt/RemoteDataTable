@@ -2,11 +2,9 @@ import React from 'react'
 import { 
   DataDateCell, 
   DataTextCell, 
-  DataTextControl,
   DataSelectCell, 
   DataTable,
-  useRowEditor,
-  withEditing,
+  useRowEditor
 } from 'reactdatatable'
 import 'reactdatatable/dist/index.css'
 
@@ -18,12 +16,11 @@ const genres = [
 ]
 
 const App = () => {
-
   const [books, setBooks] = React.useState(
     [
-      { id: 1, name: 'The Great Batsby', author: 'a', publishDate: '04/10/1925', genre: 1 },
-      { id: 2, name: 'The Hobbit', author: 'b', publishDate: '09/21/1937', genre: 2 },
-      { id: 3, name: 'The Picture of Dorian Gray', author: 'c', publishDate: '01/07/1890', genre: 3 }
+      { id: 1, name: 'The Great Gatsby', publishDate: '04/10/1925', genre: 1 },
+      { id: 2, name: 'The Hobbit', publishDate: '09/21/1937', genre: 2 },
+      { id: 3, name: 'The Picture of Dorian Gray', publishDate: '01/07/1890', genre: 3 }
     ]
   );
 
@@ -41,16 +38,10 @@ const App = () => {
   }
 
   const onEdit = (row) => {
-    row.setState((prevState) => {
-      return {...prevState, ...{className: 'Mui-selected'}}
-    })
     console.log('Editing..');
   }
 
   const onRevert = (row) => {
-    row.setState((prevState) => {
-      return {...prevState, ...{className: 'row-read'}}
-    })
     console.log('onRevert..');
   }
 
@@ -64,8 +55,6 @@ const App = () => {
     (row) => {onSave(row)},
     (row) => {onRevert(row)}
   )
-  
-  const EditableTextControl = withEditing(DataTextControl)
 
   const columns = [
     {
@@ -73,15 +62,8 @@ const App = () => {
       accessor: 'name',
       defaultValue: '',
       Cell: (cell) => {
-        return <EditableTextControl row={cell.row} accessor='name' value={cell.value} />
-      }
-    },
-    {
-      Header: 'Author',
-      accessor: 'author',
-      defaultValue: '',
-      Cell: (cell) => {
-        return <DataTextCell cell={cell} accessor='author' />
+        const validation = { required: true, message: 'Please enter a name' }
+        return <DataTextCell cell={cell} accessor='name' validation={validation} />
       }
     },
     {
@@ -97,7 +79,19 @@ const App = () => {
       accessor: 'genre',
       defaultValue: 'default',
       Cell: (cell) => {
-        return <DataSelectCell cell={cell} accessor='genre' items={genres} />
+        const validation = {
+          required: true,
+          defaultValue: 'default',
+          message: 'Please select a genre'
+        }
+        return (
+          <DataSelectCell 
+            cell={cell} 
+            accessor='genre' 
+            items={genres} 
+            validation={validation} 
+          />
+        )
       }
     },
     {

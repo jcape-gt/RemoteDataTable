@@ -1,6 +1,12 @@
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
-import { MenuItem, Select } from '@material-ui/core'
+import { MenuItem, Select, FormHelperText } from '@material-ui/core'
+
+function validate(value, validator) {
+  console.log(`value: ${value}`)
+  console.log(validator)
+  return validator.required && value === validator.defaultValue
+}
 
 /**
  * An editable select/dropdown control
@@ -10,30 +16,43 @@ import { MenuItem, Select } from '@material-ui/core'
  * @returns {ReactElement} The element to be rendered
  */
 function SelectControl(props) {
-  const { value, onChange, items } = props
-  const [editValue, setNewValue] = useState(value)
+  const { value, onChange, items, validation } = props
+  const [editValue, setNewValue] = useState({ value: value, error: false })
 
   const onLocalChange = (event) => {
-    console.log(event.target.value)
-    setNewValue(event.target.value)
+    const newValue = {
+      value: event.target.value,
+      error: validate(event.target.value, validation)
+    }
+    setNewValue(newValue)
     onChange(event.target.value)
   }
 
   return (
-    <Select
-      value={editValue}
-      onChange={(event) => onLocalChange(event)}
-      fullWidth
-    >
-      {items.map((item) => {
-        return (
-          <MenuItem key={item.key} value={item.key}>
-            {item.value}
-          </MenuItem>
-        )
-      })}
-    </Select>
+    <React.Fragment>
+      <Select
+        value={editValue.value}
+        onChange={(event) => onLocalChange(event)}
+        fullWidth
+        error={editValue.error}
+      >
+        {items.map((item) => {
+          return (
+            <MenuItem key={item.key} value={item.key}>
+              {item.value}
+            </MenuItem>
+          )
+        })}
+      </Select>
+      {editValue.error && (
+        <FormHelperText error>{validation.message}</FormHelperText>
+      )}
+    </React.Fragment>
   )
+}
+
+SelectControl.defaultProps = {
+  validation: { required: false, message: '', defaultValue: '' }
 }
 
 SelectControl.propTypes = {

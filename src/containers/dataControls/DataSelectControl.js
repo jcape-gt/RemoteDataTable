@@ -11,7 +11,7 @@ import SelectControl from '../baseControls/SelectControl'
  * @returns {ReactElement} StateControl element which handles rendering
  */
 function DataSelectControl(props) {
-  const { value, editing, onChange, items } = props
+  const { value, editing, onChange, items, validation } = props
 
   const viewItem = items.find((item) => {
     return item.key === value
@@ -22,7 +22,12 @@ function DataSelectControl(props) {
       editing={editing}
       viewControl={viewItem.value}
       editControl={
-        <SelectControl value={value} onChange={onChange} items={items} />
+        <SelectControl
+          value={value}
+          onChange={onChange}
+          items={items}
+          validation={validation}
+        />
       }
     />
   )

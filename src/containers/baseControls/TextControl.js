@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { TextField } from '@material-ui/core'
+
+function validate(value, validator) {
+  return validator.required && !value
+}
 
 /**
  * An editable text control
@@ -9,32 +13,32 @@ import { TextField } from '@material-ui/core'
  * @returns {ReactElement} The element to be rendered
  */
 function TextControl(props) {
-  const { value, onChange } = props
-  const [editValue, setNewValue] = useState(value)
-
-  useEffect(() => {
-    console.log(`TextControl ${editValue} mounted`)
-
-    return () => {
-      console.log(`TextControl ${editValue} unmounted`)
-    }
-  })
+  const { value, onChange, validation, ...childProps } = props
+  const [editValue, setNewValue] = useState({ value: value, error: false })
 
   const onLocalChange = (value) => {
-    console.log(`onchange value: ${value}`)
-    setNewValue(value)
+    const newValue = {
+      value: value,
+      error: validate(value, validation)
+    }
+    setNewValue(newValue)
     onChange(value)
-    console.log(`edit value: ${editValue}`)
   }
 
-  console.log(`Text control with value: ${editValue}`)
   return (
     <TextField
-      value={editValue}
+      value={editValue.value}
       onChange={(event) => onLocalChange(event.target.value)}
       fullWidth
+      error={editValue.error}
+      helperText={editValue.error ? validation.message : null}
+      {...childProps}
     />
   )
+}
+
+TextControl.defaultProps = {
+  validation: { required: false, message: '' }
 }
 
 TextControl.propTypes = {

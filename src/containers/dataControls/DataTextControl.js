@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import DataControl from './DataControl'
 import TextControl from '../baseControls/TextControl'
+import { useController } from 'react-hook-form'
 
 /**
  * Renders a text control with view and edit mode
@@ -11,13 +12,19 @@ import TextControl from '../baseControls/TextControl'
  * @returns {ReactElement} StateControl element which handles rendering
  */
 function DataTextControl(props) {
-  const { value, editing, onChange } = props
+  const { value, editing, onChange, validation } = props
 
   return (
     <DataControl
       editing={editing}
       viewControl={value}
-      editControl={<TextControl value={value} onChange={onChange} />}
+      editControl={
+        <TextControl
+          value={value}
+          onChange={onChange}
+          validation={validation}
+        />
+      }
     />
   )
 }

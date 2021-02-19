@@ -22,14 +22,11 @@ Super bloated usage example, but it is what it is
 
 ```jsx
 import React from 'react'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns'
 import { 
-  DataDateControl, 
-  DataTextControl, 
-  DataSelectControl, 
+  DataDateCell, 
+  DataTextCell, 
+  DataSelectCell, 
   DataTable,
-  withEditing,
   useRowEditor
 } from 'reactdatatable'
 import 'reactdatatable/dist/index.css'
@@ -42,10 +39,9 @@ const genres = [
 ]
 
 const App = () => {
-
   const [books, setBooks] = React.useState(
     [
-      { id: 1, name: 'The Great Batsby', publishDate: '04/10/1925', genre: 1 },
+      { id: 1, name: 'The Great Gatsby', publishDate: '04/10/1925', genre: 1 },
       { id: 2, name: 'The Hobbit', publishDate: '09/21/1937', genre: 2 },
       { id: 3, name: 'The Picture of Dorian Gray', publishDate: '01/07/1890', genre: 3 }
     ]
@@ -55,6 +51,9 @@ const App = () => {
     const updatedBooks = row.state.dirtyValues;
     setBooks([...books].map(o => {
       if(o.id === updatedBooks.id) {
+        if(updatedBooks.id === 'new') {
+          updatedBooks.id = updatedBooks.name;
+        }
         return {...o, ...updatedBooks}
       }
       else return o;
@@ -62,16 +61,10 @@ const App = () => {
   }
 
   const onEdit = (row) => {
-    row.setState((prevState) => {
-      return {...prevState, ...{className: 'Mui-selected'}}
-    })
     console.log('Editing..');
   }
 
   const onRevert = (row) => {
-    row.setState((prevState) => {
-      return {...prevState, ...{className: 'row-read'}}
-    })
     console.log('onRevert..');
   }
 
@@ -86,23 +79,14 @@ const App = () => {
     (row) => {onRevert(row)}
   )
 
-  const EditableCell = withEditing(DataTextControl)
-  const EditableDateCell = withEditing(DataDateControl)
-  const EditableSelectCell = withEditing(DataSelectControl)
-
   const columns = [
     {
       Header: 'Name',
       accessor: 'name',
       defaultValue: '',
       Cell: (cell) => {
-        return (
-          <EditableCell 
-            value={cell.value} 
-            accessor='name'
-            row={cell.row} 
-          />
-        )
+        const validation = { required: true, message: 'Please enter a name' }
+        return <DataTextCell cell={cell} accessor='name' validation={validation} />
       }
     },
     {
@@ -110,13 +94,7 @@ const App = () => {
       accessor: 'publishDate',
       defaultValue: '',
       Cell: (cell) => {
-        return (
-          <EditableDateCell 
-            value={cell.value} 
-            row={cell.row} 
-            accessor='publishDate' 
-          />
-        )
+        return <DataDateCell cell={cell} accessor='publishDate' />
       }
     },
     {
@@ -124,12 +102,17 @@ const App = () => {
       accessor: 'genre',
       defaultValue: 'default',
       Cell: (cell) => {
+        const validation = {
+          required: true,
+          defaultValue: 'default',
+          message: 'Please select a genre'
+        }
         return (
-          <EditableSelectCell 
-            value={cell.value} 
-            row={cell.row} 
+          <DataSelectCell 
+            cell={cell} 
             accessor='genre' 
-            items={genres}
+            items={genres} 
+            validation={validation} 
           />
         )
       }
@@ -144,7 +127,6 @@ const App = () => {
   ]
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <DataTable 
         data={books} 
         columns={columns} 
@@ -154,7 +136,6 @@ const App = () => {
         initialRowState={initialRowEditState}
         displayBlankRow={true}
       />
-    </MuiPickersUtilsProvider>
   )
 }
 
